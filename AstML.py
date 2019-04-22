@@ -14,15 +14,8 @@ Created on Mon Apr 22 12:31:17 2019
 #    https://groups.google.com/forum/#!forum/astroml-general
 from matplotlib import pyplot as plt
 import numpy as np
-from sklearn.mixture import GMM
+from sklearn.mixture import GaussianMixture
 
-#----------------------------------------------------------------------
-# This function adjusts matplotlib settings for a uniform feel in the textbook.
-# Note that with usetex=True, fonts are rendered with LaTeX.  This may
-# result in an error if LaTeX is not installed on your system.  In that case,
-# you can set usetex to False.
-from astroML.plotting import setup_text_plots
-setup_text_plots(fontsize=8, usetex=True)
 
 #------------------------------------------------------------
 # Set up the dataset.
@@ -33,7 +26,7 @@ setup_text_plots(fontsize=8, usetex=True)
 #  and weights by-hand.
 np.random.seed(1)
 
-gmm = GMM(3, n_iter=1)
+gmm = GaussianMixture(3, max_iter=1)
 gmm.means_ = np.array([[-1], [0], [3]])
 gmm.covars_ = np.array([[1.5], [1], [0.5]]) ** 2
 gmm.weights_ = np.array([0.3, 0.5, 0.2])
