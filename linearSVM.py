@@ -17,6 +17,10 @@ ax1 = df.plot.scatter(x='x',
                       colormap='viridis')
 svc = LinearSVC(fit_intercept=False, C=100)
 model = svc.fit(df[['x','y']],df['class'])
+w = model.coef_[0]
+a = -w[0] / w[1]
+xx = np.linspace(-5, 5)
+yy = a * xx
 plt.scatter(df['x'],df['y'])
 plt.plot(xx, yy, 'k-')
 plt.show()
