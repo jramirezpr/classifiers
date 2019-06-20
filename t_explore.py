@@ -16,7 +16,7 @@ sensor_names = ["sensor{}".format(i) for i in range(10)]
 counter = 0
 df_sensor["bin1"] = pd.cut(df_sensor["sensor1"], 10)
 
-df_sensor["class_label2"] = df_sensor['class_label']== 1
+df_sensor["class_label2"] = df_sensor['class_label'] == 1
 df_sensor["class_label3"] = df_sensor['class_label'] == -1
 df_binned = df_sensor[['bin1',
                        'class_label2',
@@ -27,4 +27,3 @@ for axrow in axes:
         col_name = sensor_names[counter]
         ax.scatter(df_sensor[col_name], df_sensor['class_label'])
         counter = counter + 1
-        
