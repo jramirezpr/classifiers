@@ -27,7 +27,8 @@ def relative_bin_val(sensor_name, df_sensor):
     df_binned = df_sensor[[bins,
                            'class_label2',
                            'class_label3']].groupby([bins]).sum()
-    df_binned['class_1 in_bin concentration'] = df_binned.apply(compute_relval, axis=1)
+    catname = 'class_1 in_bin concentration'
+    df_binned[catname] = df_binned.apply(compute_relval, axis=1)
     old_ind = list(df_binned.index.values)
     df_binned = df_binned.rename(index=dict(zip(old_ind, range(10))))
     return df_binned
@@ -41,6 +42,7 @@ def plots_per_sensor(df_sensor):
             if(i * 3 + j <= 9):
                 col_name = SENSOR_NAMES[counter]
                 df_binned = relative_bin_val(col_name, df_sensor)
-                df_binned.plot.bar(ax=axes[i, j], y='class_1 in_bin concentration')
+                df_binned.plot.bar(ax=axes[i, j],
+                                   y='class_1 in_bin concentration')
                 counter = counter + 1
     fig.tight_layout()
