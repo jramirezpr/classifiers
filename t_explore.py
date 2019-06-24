@@ -103,33 +103,31 @@ def train_sensor_classifier(x_train, y_train):
 
 
 def rank_sensors(df_sensor):
-    x_train, x_test, y_train, y_test = split(DF_SENSOR)
+    x_train, x_test, y_train, y_test = split(df_sensor)
     top_scores = []
     test_scores = []
     for sensor in SENSOR_NAMES:
         x_sensor = x_train[sensor]
-        x_sensor = x_sensor.values.reshape(-1,1)
+        x_sensor = x_sensor.values.reshape(-1, 1)
         res_dict = train_sensor_classifier(x_sensor, y_train)
-        top_scores.append((res_dict["best score"].copy(), sensor) )
+        top_scores.append((res_dict["best score"].copy(), sensor))
         knn = neighbors.KNeighborsClassifier(
-                n_neighbors=res_dict["best k"],
-                weights='distance'
-                )
-        x_test_ar = x_test[sensor].values.reshape(-1,1)
+            n_neighbors=res_dict["best k"],
+            weights='distance'
+            )
+        x_test_ar = x_test[sensor].values.reshape(-1, 1)
         knn.fit(x_sensor, y_train)
-        test_scores.append((knn.score(x_test_ar, y_test),sensor))
+        test_scores.append((knn.score(x_test_ar, y_test), sensor))
     top_scores.sort()
     test_scores.sort()
     return [top_scores, test_scores]
+
+
 TRAIN_RANK, TEST_RANK = rank_sensors(DF_SENSOR)
 TRAIN_RANK_NUM = [int(val[1][6:]) for val in TRAIN_RANK]
 print(TRAIN_RANK_NUM)
 
 TEST_RANK_NUM = [int(val[1][6:]) for val in TEST_RANK]
-print(scipy.stats.kendalltau(TRAIN_RANK_NUM,TEST_RANK_NUM)[0])
-
-    
-        
-        
-        
-    
+# to figure out the kendalltau statistic, uncomment the following
+# when running
+#print(scipy.stats.kendalltau(TRAIN_RANK_NUM, TEST_RANK_NUM)[0])

@@ -1,0 +1,24 @@
+Analysis
+
+To rank the sensors according to predictive power I first define which is the
+best sensor.
+The best sensor is the one that you would choose if you could only choose access
+to the data of one sensor. The next-best sensor would be the one that
+you would choose if you couldn't choose the best sensor.
+In general ,the k-th sensor in the ranking would be the one that I would
+choose if I couldn't choose any of the 0...k-1 best sensors.
+To do prediction using sensor_i ,we would apply some classifier method to the data (sensor_i, class_label).
+Of course, in order to know how I would use the chosen sensor for prediction,
+it is best to do some exploratory analysis. 
+First, it is useful to see that both class labels have 200 elements 
+(equally-sized classes).
+Next, What I do is I split each sensor feature into 10 different bins of equal width,
+and see what is the amount elements of class 1 in bin_i as a proportion of the total amount of elements
+in bin_i. This gives me the bar charts in the figure. Intuitively, the best sensors are the ones were
+each bar is far away from 0.5 (random classifier), or put in another way, the ones were each bar is either
+close to 1 or close to 0. In fact, these bar charts could be seen as a crude classifier, where
+to predict a new element x we would figure out which bin bin_i to put it in, and the predicted class would be
+2*(round(proportion(bin_i)))-1.
+This crude classifier actually inspired my approach using k-neighbors classifier: for a point p, create a "bin"
+made up of the k closest nearest neighbors from the provided data, and they vote according to which class they belong
+in the data.
