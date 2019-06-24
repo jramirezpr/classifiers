@@ -63,14 +63,18 @@ def plots_per_sensor(df_sensor):
 def split(df_sensor, sensor_name):
     """function splits into train and test data"""
     return model_selection.train_test_split(
-        df_sensor[sensor_name],
-        df_sensor['Annual Usage'],
+        df_sensor[[sensor_name]],
+        df_sensor['class_label'],
         test_size=0.5,
         random_state=1)
 
 
 def train_sensor_classifier(x_train, y_train):
-
+    """ function trains the k-nearest-neighbors classifier with
+    the training data. the number of neighbors chosen k is tuned by
+    choosing the k with the maximal score in cross-validation.
+    We use K-fold cross validation (not the same K as number of neighbors)
+    in this case, 4 splits used"""
     kf_4 = model_selection.KFold(n_splits=4, shuffle=True, random_state=1)
     max_score = 0
     best_k = 1
@@ -85,7 +89,7 @@ def train_sensor_classifier(x_train, y_train):
             x_train,
             y_train,
             cv=kf_4,
-            scoring='balanced_accuracy_score'
+            scoring='balanced_accuracy'
             ).mean()
         score_list.append(score)
         if score > max_score:
@@ -95,3 +99,4 @@ def train_sensor_classifier(x_train, y_train):
             "best score": max_score,
             "best k":best_k
             }
+    
