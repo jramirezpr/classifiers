@@ -24,7 +24,7 @@ def compute_relval(row):
 
 def relative_bin_val(df_sensor, sensor_name):
     """return DataFrame with within-bin proportion of
-    elements with label 1""" 
+    elements with label 1"""
     bins = sensor_name + "bins"
     df_sensor[bins] = pd.cut(df_sensor[sensor_name], 10)
     df_sensor["class_label2"] = df_sensor['class_label'] == 1
@@ -61,6 +61,7 @@ def plots_per_sensor(df_sensor):
 
 
 def split(df_sensor, sensor_name):
+    """function splits into train and test data"""
     return model_selection.train_test_split(
         df_sensor[sensor_name],
         df_sensor['Annual Usage'],
