@@ -16,12 +16,15 @@ SENSOR_NAMES = ["sensor{}".format(i) for i in range(10)]
 
 
 def compute_relval(row):
+    """compute relative amount of 1's"""
     return (row['class_label2']
             / max(row['class_label2'] + row['class_label3'], 0)
             )
 
 
 def relative_bin_val(df_sensor, sensor_name):
+    """return DataFrame with within-bin proportion of
+    elements with label 1""" 
     bins = sensor_name + "bins"
     df_sensor[bins] = pd.cut(df_sensor[sensor_name], 10)
     df_sensor["class_label2"] = df_sensor['class_label'] == 1
@@ -37,6 +40,13 @@ def relative_bin_val(df_sensor, sensor_name):
 
 
 def plots_per_sensor(df_sensor):
+    """plot all sensor bar charts of the relative
+    frequency of class 1 within a bin (each bar corres
+    ponds to an equally spaced bin of sensor values).
+    Used for data visualization ,best predictors
+    are the sensors corresponding
+    to the plots where the bars are farthest away from 0.5
+    """
     counter = 0
     fig, axes = plt.subplots(nrows=4, ncols=3, figsize=(14, 8))
     for i in range(4):
