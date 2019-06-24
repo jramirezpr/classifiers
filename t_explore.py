@@ -4,9 +4,12 @@ Created on Thu Jun 20 09:06:03 2019
 
 @author: user
 """
-
+from sklearn import neighbors
+import numpy as np
+from sklearn import model_selection
 import pandas as pd
 import matplotlib.pyplot as plt
+
 
 DF_SENSOR = pd.read_csv(r"C:\Users\user\Documents\task\task_data.csv",
                         index_col="sample index")
@@ -19,7 +22,7 @@ def compute_relval(row):
             )
 
 
-def relative_bin_val(sensor_name, df_sensor):
+def relative_bin_val(df_sensor, sensor_name):
     bins = sensor_name + "bins"
     df_sensor[bins] = pd.cut(df_sensor[sensor_name], 10)
     df_sensor["class_label2"] = df_sensor['class_label'] == 1
@@ -41,8 +44,19 @@ def plots_per_sensor(df_sensor):
         for j in range(3):
             if(i * 3 + j <= 9):
                 col_name = SENSOR_NAMES[counter]
-                df_binned = relative_bin_val(col_name, df_sensor)
+                df_binned = relative_bin_val(df_sensor, col_name)
                 df_binned.plot.bar(ax=axes[i, j],
                                    y='class_1 in_bin concentration')
                 counter = counter + 1
     fig.tight_layout()
+
+
+def train_sensor_classifier(df_sensor, sensor_name):
+    X_train, X_test, y_train, y_test = model_selection.train_test_split(
+        df_sensor[sensor_name],
+        df_sensor['Annual Usage'],
+        test_size=0.5,
+        random_state=1)
+    kf_4 = model_selection.KFold(n_splits=4, shuffle=True, random_state=1)
+
+    
