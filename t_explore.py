@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jun 20 09:06:03 2019
+Created on Sat Jun 22 09:06:03 2019
 
-@author: user
+@author: Juan Carlos Ramirez
 """
 from sklearn import neighbors
 from sklearn import model_selection
