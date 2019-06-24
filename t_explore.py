@@ -4,6 +4,7 @@ Created on Sat Jun 22 09:06:03 2019
 
 @author: Juan Carlos Ramirez
 """
+import scipy
 from sklearn import neighbors
 from sklearn import model_selection
 import pandas as pd
@@ -60,12 +61,12 @@ def plots_per_sensor(df_sensor):
     fig.tight_layout()
 
 
-def split(df_sensor, sensor_name):
+def split(df_sensor):
     """function splits into train and test data"""
     return model_selection.train_test_split(
-        df_sensor[[sensor_name]],
+        df_sensor[SENSOR_NAMES],
         df_sensor['class_label'],
-        test_size=0.5,
+        test_size=0.4,
         random_state=1)
 
 
@@ -75,11 +76,11 @@ def train_sensor_classifier(x_train, y_train):
     choosing the k with the maximal score in cross-validation.
     We use K-fold cross validation (not the same K as number of neighbors)
     in this case, 4 splits used"""
-    kf_4 = model_selection.KFold(n_splits=4, shuffle=True, random_state=1)
+    kf_4 = model_selection.KFold(n_splits=4, shuffle=True, random_state=42)
     max_score = 0
     best_k = 1
     score_list = []
-    for i in range(5, 30):
+    for i in range(5, 40):
         knn = neighbors.KNeighborsClassifier(
             n_neighbors=i,
             weights='distance'
@@ -89,14 +90,46 @@ def train_sensor_classifier(x_train, y_train):
             x_train,
             y_train,
             cv=kf_4,
-            scoring='balanced_accuracy'
+            scoring='accuracy'
             ).mean()
         score_list.append(score)
         if score > max_score:
             max_score = score
             best_k = i
-    return {"scores":score_list,
+    return {"scores": score_list,
             "best score": max_score,
-            "best k":best_k
+            "best k": best_k
             }
+
+
+def rank_sensors(df_sensor):
+    x_train, x_test, y_train, y_test = split(DF_SENSOR)
+    top_scores = []
+    test_scores = []
+    for sensor in SENSOR_NAMES:
+        x_sensor = x_train[sensor]
+        x_sensor = x_sensor.values.reshape(-1,1)
+        res_dict = train_sensor_classifier(x_sensor, y_train)
+        top_scores.append((res_dict["best score"].copy(), sensor) )
+        knn = neighbors.KNeighborsClassifier(
+                n_neighbors=res_dict["best k"],
+                weights='distance'
+                )
+        x_test_ar = x_test[sensor].values.reshape(-1,1)
+        knn.fit(x_sensor, y_train)
+        test_scores.append((knn.score(x_test_ar, y_test),sensor))
+    top_scores.sort()
+    test_scores.sort()
+    return [top_scores, test_scores]
+TRAIN_RANK, TEST_RANK = rank_sensors(DF_SENSOR)
+TRAIN_RANK_NUM = [int(val[1][6:]) for val in TRAIN_RANK]
+print(TRAIN_RANK_NUM)
+
+TEST_RANK_NUM = [int(val[1][6:]) for val in TEST_RANK]
+print(scipy.stats.kendalltau(TRAIN_RANK_NUM,TEST_RANK_NUM)[0])
+
+    
+        
+        
+        
     
