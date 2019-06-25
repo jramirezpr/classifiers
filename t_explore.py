@@ -135,5 +135,5 @@ for x in TRAIN_RANK_NUM:
 TEST_RANK_NUM = [int(val[1][6:]) for val in TEST_RANK]
 # to figure out the kendalltau statistic, uncomment the following
 # when running
-#TRAIN_RANK_NUM = [int(val[1][6:]) for val in TRAIN_RANK2]
-#print(scipy.stats.kendalltau(TRAIN_RANK_NUM, TEST_RANK_NUM)[0])
+# TRAIN_RANK_NUM = [int(val[1][6:]) for val in TRAIN_RANK2]
+# print(scipy.stats.kendalltau(TRAIN_RANK_NUM, TEST_RANK_NUM)[0])
