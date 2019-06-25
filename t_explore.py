@@ -61,7 +61,7 @@ def plots_per_sensor(df_sensor):
     fig.tight_layout()
 
 
-def split(df_sensor,test_size):
+def split(df_sensor, test_size):
     """function splits into train and test data"""
     return model_selection.train_test_split(
         df_sensor[SENSOR_NAMES],
@@ -102,7 +102,7 @@ def train_sensor_classifier(x_train, y_train):
             }
 
 
-def rank_sensors(df_sensor,test_size):
+def rank_sensors(df_sensor, test_size):
     """function ranks sensors by percentage of prediction accuracy"""
     x_train, x_test, y_train, y_test = split(df_sensor, test_size)
     top_scores = []
@@ -124,8 +124,8 @@ def rank_sensors(df_sensor,test_size):
     return [top_scores, test_scores]
 
 
-TRAIN_RANK, TEST_RANK = rank_sensors(DF_SENSOR,test_size =0.1)
-TRAIN_RANK2, TEST_RANK = rank_sensors(DF_SENSOR,test_size = 0.5)
+TRAIN_RANK, TEST_RANK = rank_sensors(DF_SENSOR, test_size=0.1)
+TRAIN_RANK2, TEST_RANK = rank_sensors(DF_SENSOR, test_size=0.5)
 
 TRAIN_RANK_NUM = [int(val[1][6:]) for val in TRAIN_RANK]
 TRAIN_RANK_NUM.reverse()
