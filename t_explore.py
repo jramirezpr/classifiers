@@ -11,7 +11,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-DF_SENSOR = pd.read_csv(r"C:\Users\user\Documents\task\task_data.csv",
+DF_SENSOR = pd.read_csv(r"task_data.csv",
                         index_col="sample index")
 SENSOR_NAMES = ["sensor{}".format(i) for i in range(10)]
 

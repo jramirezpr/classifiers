@@ -17,8 +17,12 @@ and see what is the amount elements of class 1 in bin_i as a proportion of the t
 in bin_i. This gives me the bar charts in the figure. Intuitively, the best sensors are the ones were
 each bar is far away from 0.5 (random classifier), or put in another way, the ones were each bar is either
 close to 1 or close to 0. In fact, these bar charts could be seen as a crude classifier, where
-to predict a new element x we would figure out which bin bin_i to put it in, and the predicted class would be
+to predict a new element x first I would figure out which bin bin_i to put it in, and the predicted class would be
 2*(round(proportion(bin_i)))-1.
-This crude classifier actually inspired my approach using k-neighbors classifier: for a point p, create a "bin"
+
+This crude classifier actually inspired my approach using k-neighbors classifier: for a data point x_val, create a "bin"
 made up of the k closest nearest neighbors from the provided data, and they vote according to which class they belong
-in the data.
+in the data. I discount the voting power by the inverse of the distance to x_val (not all votes are worth the same).
+To choose the k for each sensor, I do parameter tuning through Kfold cross-validation, choosing the k gives us the maximum
+accuracy when averaged across the folds. Once I have a model for each of the sensors, I rank the sensors according
+to what their model prediction accuracy is.  When I double-check against the test data, the 
