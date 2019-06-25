@@ -61,13 +61,13 @@ def plots_per_sensor(df_sensor):
     fig.tight_layout()
 
 
-def split(df_sensor):
+def split(df_sensor,test_size):
     """function splits into train and test data"""
     return model_selection.train_test_split(
         df_sensor[SENSOR_NAMES],
         df_sensor['class_label'],
-        test_size=0.4,
-        random_state=1)
+        test_size=test_size,
+        random_state=42)
 
 
 def train_sensor_classifier(x_train, y_train):
@@ -80,7 +80,7 @@ def train_sensor_classifier(x_train, y_train):
     max_score = 0
     best_k = 1
     score_list = []
-    for i in range(5, 40):
+    for i in range(5, 50):
         knn = neighbors.KNeighborsClassifier(
             n_neighbors=i,
             weights='distance'
@@ -102,8 +102,9 @@ def train_sensor_classifier(x_train, y_train):
             }
 
 
-def rank_sensors(df_sensor):
-    x_train, x_test, y_train, y_test = split(df_sensor)
+def rank_sensors(df_sensor,test_size):
+    """function ranks sensors by percentage of prediction accuracy"""
+    x_train, x_test, y_train, y_test = split(df_sensor, test_size)
     top_scores = []
     test_scores = []
     for sensor in SENSOR_NAMES:
@@ -123,11 +124,16 @@ def rank_sensors(df_sensor):
     return [top_scores, test_scores]
 
 
-TRAIN_RANK, TEST_RANK = rank_sensors(DF_SENSOR)
+TRAIN_RANK, TEST_RANK = rank_sensors(DF_SENSOR,test_size =0.1)
+TRAIN_RANK2, TEST_RANK = rank_sensors(DF_SENSOR,test_size = 0.5)
+
 TRAIN_RANK_NUM = [int(val[1][6:]) for val in TRAIN_RANK]
-print(TRAIN_RANK_NUM)
+TRAIN_RANK_NUM.reverse()
+for x in TRAIN_RANK_NUM:
+    print(x)
 
 TEST_RANK_NUM = [int(val[1][6:]) for val in TEST_RANK]
 # to figure out the kendalltau statistic, uncomment the following
 # when running
+#TRAIN_RANK_NUM = [int(val[1][6:]) for val in TRAIN_RANK2]
 #print(scipy.stats.kendalltau(TRAIN_RANK_NUM, TEST_RANK_NUM)[0])
